@@ -375,13 +375,6 @@
             color: #e8c79a;
             text-align: center;
         }
-
-        .score-display {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #d4a574;
-            margin: 20px 0;
-        }
     </style>
 </head>
 <body>
@@ -448,6 +441,8 @@
                 <div class="success-box" id="saveStatus">جاري حفظ النتيجة... / Saving results...</div>
                 <p class="congrats-message">شكراً لمشاركتك في مسابقة القهراوية!</p>
                 <p class="congrats-message">Thank you for participating in the Cairo Quiz!</p>
+                <p class="congrats-message" style="margin-top: 20px; color: #d4a574; font-weight: 600;">سيتم الإعلان عن النتائج لاحقاً</p>
+                <p class="congrats-message" style="margin-top: 5px;">Results will be announced later</p>
                 <button class="btn btn-primary" onclick="resetQuiz()">العودة للبداية / Return to Home</button>
             </div>
         </div>
@@ -466,10 +461,10 @@
     <script>
         const CONFIG = {
             APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbz18rQVGUK7K3TM9s5wOX6I2zDnr6F_eXEKjUgRRYhX3INurlNYvx3EvsV1iShbWuHqpg/exec",
-            QUIZ_START_HOUR: 18,
-            QUIZ_START_MINUTE: 0,
-            QUIZ_END_HOUR: 21,
-            QUIZ_END_MINUTE: 0
+            QUIZ_START_HOUR: 19,
+            QUIZ_START_MINUTE: 25,
+            QUIZ_END_HOUR: 19,
+            QUIZ_END_MINUTE: 45
         };
 
         const QUESTIONS = [
@@ -574,8 +569,7 @@
             choices: document.getElementById('choices'),
             startBtn: document.getElementById('startBtn'),
             codeErrorMessage: document.getElementById('codeErrorMessage'),
-            saveStatus: document.getElementById('saveStatus'),
-            scoreDisplay: document.getElementById('scoreDisplay')
+            saveStatus: document.getElementById('saveStatus')
         };
 
         function checkTimeAccess() {
@@ -824,7 +818,7 @@
                 const result = JSON.parse(text);
                 
                 if (result.success) {
-                    elements.saveStatus.innerHTML = '✅ تم حفظ النتيجة بنجاح!';
+                    elements.saveStatus.innerHTML = '✅ تم حفظ النتيجة بنجاح!<br>Results saved successfully!';
                     elements.saveStatus.classList.remove('alert-box');
                     elements.saveStatus.classList.add('success-box');
                     return true;
@@ -836,7 +830,7 @@
                 }
             } catch (error) {
                 console.error('Error submitting results:', error);
-                elements.saveStatus.innerHTML = '⚠️ فشل حفظ النتيجة';
+                elements.saveStatus.innerHTML = '⚠️ فشل حفظ النتيجة / Failed to save results';
                 elements.saveStatus.classList.remove('success-box');
                 elements.saveStatus.classList.add('alert-box');
                 return false;
@@ -855,8 +849,6 @@
             elements.questionScreen.classList.add('hidden');
             elements.congratsScreen.classList.remove('hidden');
             elements.progressBar.style.width = '100%';
-            
-            elements.scoreDisplay.textContent = `${state.score}/${QUESTIONS.length}`;
             
             await submitResults();
         }
@@ -909,4 +901,3 @@
     </script>
 </body>
 </html>
-
