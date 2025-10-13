@@ -460,11 +460,11 @@
 
     <script>
         const CONFIG = {
-            APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwYDTONCU9h2A1saFlNOFWC_yqWWh8jyzPakl8EcvxDt1AJlOrtt_KZymrlKp3v8wqFJQ/exec",
-            QUIZ_START_HOUR: 21,
-            QUIZ_START_MINUTE: 6,
-            QUIZ_END_HOUR: 21,
-            QUIZ_END_MINUTE: 59
+            APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyjVAHrCVTBiYmbVUgVc05PRUrmW8LG0x0KTFzv1y0AGGK5oO1Xi6qb7dUPNOZbqVpphw/exec",
+            QUIZ_START_HOUR: 20,
+            QUIZ_START_MINUTE: 0,
+            QUIZ_END_HOUR: 23,
+            QUIZ_END_MINUTE: 0
         };
 
         const QUESTIONS = [
@@ -619,35 +619,6 @@
             }
         }
 
-        async function markCodeAsUsed(code, name) {
-            try {
-                const params = new URLSearchParams({
-                    action: 'markUsed',
-                    code: code,
-                    name: name,
-                    _t: Date.now()
-                });
-                
-                const url = `${CONFIG.APPS_SCRIPT_URL}?${params.toString()}`;
-                console.log('Marking code as used:', code);
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
-                
-                const text = await response.text();
-                const result = JSON.parse(text);
-                console.log('Mark used response:', result);
-                
-                return result;
-            } catch (error) {
-                console.error('Error marking code as used:', error);
-                return { success: false };
-            }
-        }
-
         elements.registrationForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -691,19 +662,6 @@
             
             if (!codeValidation.valid) {
                 elements.codeErrorMessage.textContent = codeValidation.message || 'هذا الكود غير صالح أو تم استخدامه / This code is invalid or has been used';
-                elements.landingScreen.classList.add('hidden');
-                elements.invalidCodeScreen.classList.remove('hidden');
-                state.isValidating = false;
-                elements.startBtn.disabled = false;
-                elements.startBtn.innerHTML = 'ابدأ الاختبار / Start Exam';
-                return;
-            }
-
-            // تعليم الكود كمستخدم قبل البدء في الاختبار
-            const markResult = await markCodeAsUsed(code, name);
-            
-            if (!markResult.success) {
-                elements.codeErrorMessage.textContent = 'حدث خطأ، يرجى المحاولة مرة أخرى / An error occurred, please try again';
                 elements.landingScreen.classList.add('hidden');
                 elements.invalidCodeScreen.classList.remove('hidden');
                 state.isValidating = false;
@@ -945,6 +903,3 @@
     </script>
 </body>
 </html>
-
-
-
